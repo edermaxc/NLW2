@@ -1,91 +1,28 @@
-const proffys = [
-    {
-        name: "Diego Fernandes",
-        avatar: "https://avatars2.githubusercontent.com/u/2254731?s=460&amp;u=0ba16a79456c2f250e7579cb388fa18c5c2d7d65&amp;v=4",
-        whatsapp: "5511985854646",
-        bio: "Entusiasta das melhores tecnologias de química avançada.<br><br>Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões.",
-        subject: "Química",
-        cost: "20,00",
-        weekday: [1],
-        time_from: [720],
-        time_to: [1220]
-    },
-    {
-        name: "Eder Colin",
-        avatar: "https://avatars2.githubusercontent.com/u/2254731?s=460&amp;u=0ba16a79456c2f250e7579cb388fa18c5c2d7d65&amp;v=4",
-        whatsapp: "5511985854646",
-        bio: "Entusiasta das melhores tecnologias de química avançada.<br><br>Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões.",
-        subject: "Química",
-        cost: "40,00",
-        weekday: [2],
-        time_from: [720],
-        time_to: [1220]
-    }
-]
-
-const subjects = [
-    "Artes",
-    "Biologia",
-    "Ciências",
-    "Educação física",
-    "Física",
-    "Geografia",
-    "História",
-    "Matemática",
-    "Português",
-    "Química", 
-]
-
-const weekdays = [
-    "Domingo",
-    "Segunda-feira",
-    "Terça-feira",
-    "Quarta-feira",
-    "Quinta-feira",
-    "Sexta-feira",
-    "Sábado",
-] 
-
-function getSubject(subNum){
-    return subjects[+subNum-1]
-}
 
 const nunjucks = require("nunjucks")
 const express = require("express")
 const server = express()
+
+const {
+    pageLanding,
+    pageStudy,
+    pageGiveClasses,
+    saveClasses
+} = require('./pages')
+
 nunjucks.configure("src/views", { 
     express: server,
     noCache: true,
 })
 
-function pageLanding (req, res){
-    return res.render("index.html")
-}
- 
-function pageStudy(req, res){
-    const filters = req.query
-    return res.render("study.html", {proffys, filters, subjects, weekdays })
-}
 
-function pageGiveClasses(req, res){
-    const data = req.query
-
-    const isEmpty = Object.keys(data).length == 0
-    if (!isEmpty) {
-        console.log("entrei")
-        data.subject = getSubject(data.subject)
-        proffys.push(data)
-
-        return res.redirect("/study")
-    }
-    
-    return res.render("give-classes.html", {subjects, weekdays})
-}
 
 server
+.use(express.urlencoded({extended: true}))
 .use(express.static("public"))
 .get("/",pageLanding)
 .get("/study", pageStudy)
 .get("/give-classes", pageGiveClasses)
+.post("/save-class", saveClasses)
 .listen(5500)
 

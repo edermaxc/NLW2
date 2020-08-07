@@ -43,7 +43,7 @@
                         <select name="weekday" id="weekday">
                             <option value="" disabled="" hidden="">Selecione uma opção</option>
                             {%for day in weekdays%}
-                                <option value="loop.index0" {{ "selected" if filters.weekday == loop.index }} >{{day}}</option>
+                                <option value="{{loop.index0}}" {{ "selected" if filters.weekday == loop.index0 }} >{{day}}</option>
                             {%endfor%}
                         </select> 
                     </div>
@@ -56,31 +56,35 @@
             </div>
         </header>
         <main>
+            
+            {% if proffys == "" %}
+                <p class="no-results">Nenhum professor encontrado com a sua pesquisa.</p>
+            {% else %}                            
+                {%for proffy in proffys %}
+                    <article class="teacher-item">
+                        <header>
+                            <img 
+                                src="{{proffy.avatar}}"
+                                alt="{{proffy.name}}">
+                            <div>
+                                <strong>{{proffy.name}}</strong>
+                                <span>{{proffy.subject}}</span>
+                            </div>
+                        </header>
+                    
+                        <p>{{proffy.bio}}</p>
+                    
+                        <footer>
+                            <p>Preço/hora<strong>R$ {{proffy.cost}}</strong>
+                            </p>
 
-            {%for proffy in proffys %}
-                <article class="teacher-item">
-                    <header>
-                        <img 
-                            src="{{proffy.avatar}}"
-                            alt="{{proffy.name}}">
-                        <div>
-                            <strong>{{proffy.name}}</strong>
-                            <span>{{proffy.subject}}</span>
-                        </div>
-                    </header>
-                
-                    <p>{{proffy.bio}}</p>
-                
-                    <footer>
-                        <p>Preço/hora<strong>R$ {{proffy.cost}}</strong>
-                        </p>
-
-                        <a href="https://api.whatsapp.com/send?l=pt_BR&phone={{proffy.whatsapp}}&text={{proffy.name}}, tenho interesse em sua aula de {{proffy.subject}}" class="button" target="_blank">
-                            <img src="/images/icons/whatsapp.svg" alt="Whatsapp">Entrar em contato
-                        </a>
-                    </footer>
-                </article>
-            {%endfor %}
+                            <a href="https://api.whatsapp.com/send?l=pt_BR&phone={{proffy.whatsapp}}&text={{proffy.name}}, tenho interesse em sua aula de {{proffy.subject}}" class="button" target="_blank">
+                                <img src="/images/icons/whatsapp.svg" alt="Whatsapp">Entrar em contato
+                            </a>
+                        </footer>
+                    </article>
+                {%endfor %}
+            {% endif %}
 
         </main>
     </div>
