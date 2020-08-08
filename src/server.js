@@ -2,6 +2,7 @@
 const nunjucks = require("nunjucks")
 const express = require("express")
 const server = express()
+const PORT = process.env.PORT || 5000
 
 const {
     pageLanding,
@@ -19,7 +20,7 @@ nunjucks.configure("src/views", {
 
 
 server
-.use(express.urlencoded({extended: true}))
+.use(express.urlencoded({extended: true})) 
 .use(express.static("public"))
 .get("/",pageLanding)
 .get("/study", pageStudy)
